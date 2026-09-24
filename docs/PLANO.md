@@ -254,6 +254,68 @@ Dados de saúde são **dados sensíveis**. Desde o design:
 
 ---
 
+## 11. Backlog priorizado (registrado)
+
+> Itens acordados durante o desenvolvimento que **não** existem no projeto de
+> referência e/ou ficam para fases seguintes.
+
+### 11.1 Engenharia Clínica (módulo `equipment`) — **prioridade Brasil**
+
+**Constatação**: o projeto de inspiração **não possui** engenharia clínica. O módulo
+`inventory` dele é estoque genérico de suprimentos (itens/categorias/consumo/fornecedores/
+ordens de compra) — não cobre **equipamentos médico-hospitalares**. Portanto, este é um
+**diferencial competitivo** para o mercado brasileiro (ANVISA, tecnovigilância, RDC).
+
+**Por que é crítico no Brasil**: hospitais e clínicas precisam gerir o parque tecnológico
+(equipamentos), com **manutenção preventiva/corretiva**, **calibração**, **rastreabilidade**
+e conformidade sanitária. Sem isso, há risco regulatório e de segurança assistencial.
+
+**Escopo planejado**
+- **Cadastro de equipamentos**: tombamento/patrimônio, fabricante, modelo, nº de série,
+  **registro ANVISA**, fornecedor, setor/localização, responsável, data de aquisição,
+  valor, vida útil, **criticidade** (alta/média/baixa), status (ativo/em manutenção/baixado).
+- **Planos de manutenção** preventiva (periodicidade, checklist) e **calibração**.
+- **Ordens de serviço** (preventiva / corretiva / calibração) com histórico, custos,
+  peças, responsável técnico e anexos (certificados).
+- **Contratos** de manutenção/garantia e custos associados.
+- **Tecnovigilância**: registro de eventos adversos / queixas técnicas (base NOTIVISA).
+- **Alertas** de vencimento de calibração e de manutenção preventiva.
+- **Indicadores**: disponibilidade, **MTBF**, **MTTR**, custo de manutenção por equipamento.
+
+**Encaixe no produto**: pacote **Hospital Completo** e/ou add-on **"Engenharia Clínica"**.
+**Fase sugerida**: após a Fase 4 (Hospitalar) — como **Fase 4.5**.
+
+**Status — MVP implementado** (`/app/equipment`, módulo `equipment`):
+- **Categorias** de equipamento.
+- **Cadastro de equipamentos**: patrimônio, nº de série, fabricante/modelo, **registro ANVISA**,
+  setor/localização, responsável, data/valor de aquisição, garantia, **criticidade** e **status**.
+- **Planos de manutenção** preventiva (periodicidade + próxima data).
+- **Ordens de serviço**: preventiva / corretiva / **calibração** / inspeção, com técnico, custo e laudo.
+- **Alerta no painel**: manutenções/calibrações vencendo (30 dias).
+- **Fase 2 implementada**: **rastreabilidade de entrega/recolhimento por setor** (`/app/equipment/movements`)
+  com data de entrega/recolhimento, quem recebeu/entregou, condição, **isolamento/doença infecciosa** e
+  **desinfecção**; **contratos** (garantia/manutenção/locação); **certificado de calibração** na OS;
+  **tecnovigilância** (eventos adversos, base NOTIVISA); e **indicadores** (`/app/equipment/indicators`:
+  disponibilidade estimada + MTTR).
+- **Pendente**: MTBF completo (exige intervalos de parada), integração automática com a ANVISA e anexos
+  de certificados.
+
+### 11.2 Outros registrados
+- **Help Desk** + **Base de Conhecimento** — *implementado* (inspirado no HelpDesk Pro + PerfexWiki,
+  ausentes no projeto de referência).
+- **Convites de usuário** (por link/token, sem depender de SMTP) — *implementado*.
+- **Cupons de desconto** (no billing do SaaS) — *implementado* (inspirado no Perfect SaaS).
+- **Backlog inspirado no Perfect SaaS** (multi-tenancy): **programa de
+  afiliados/referrals** (comissões/payouts), **domínios personalizados por tenant**, **templates de
+  e-mail**, **modo manutenção**, **localização/i18n** e **site institucional (Front CMS)**.
+- **Laudos clínicos** (nascimento/óbito/operação) — *implementado* (módulo `prescription`).
+- **Farmácia/Estoque + Compras** — *implementado* (módulo `pharmacy`).
+- **Relatórios de compras/estoque** (valoração, consumo, curva ABC) — *implementado*.
+- **Gating de menu por módulo** do tenant — *implementado*.
+- **Laboratório / Radiologia**, **Portal do paciente**, **Deploy em produção** — pendentes.
+
+---
+
 _Fonte de inspiração (somente referência, não será reutilizada como código):
 `Multi Hospital 19 April 2026` — CodeIgniter 3 (HMVC, Ion Auth, AdminLTE), banco
-`gestor_hospitalar` com 153 tabelas._
+`gestor_hospitalar` com 153 tabelas. **Não possui engenharia clínica** (ver §11.1)._

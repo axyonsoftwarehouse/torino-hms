@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Torino HMS
 
-## Getting Started
+SaaS multi-tenant de gestão hospitalar e clínica — modular por pacotes.
+Inspirado no modelo do sistema de referência (HMS multi-hospital), reescrito do zero.
 
-First, run the development server:
+- **Stack**: Next.js (App Router) + TypeScript + Tailwind + shadcn/ui + Supabase.
+- **Deploy**: Vercel (`gru1`) + Supabase (`sa-east-1`), co-localizados em São Paulo.
+- **Plano completo**: [`docs/PLANO.md`](./docs/PLANO.md).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Estrutura
+
+```
+src/
+  app/                 # rotas (App Router)
+    app/               # área autenticada (painel)
+    login/             # autenticação
+  components/          # componentes compartilhados + shadcn/ui
+  lib/
+    supabase/          # clientes (browser, server, proxy)
+    env.ts             # validação de variáveis de ambiente
+  modules/             # domínio por módulo (catálogo, navegação, futuros services)
+    core/
+supabase/
+  migrations/          # schema versionado (RLS multi-tenant)
+  seed.sql
+docs/
+  PLANO.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Como rodar
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+cp .env.example .env.local   # preencha com as credenciais do Supabase
+npm run dev                  # http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Variáveis de ambiente (`.env.local`):
 
-## Learn More
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Banco de dados
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Ver [`supabase/README.md`](./supabase/README.md). Resumo:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npx supabase init
+npx supabase start
+npx supabase db reset    # aplica migrations + seed
+```
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run dev      # servidor de desenvolvimento
+npm run build    # build de produção
+npm run start    # servir o build
+npm run lint     # ESLint
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Status
+
+Fase 0 (fundação) concluída: scaffold, camada Supabase, catálogo de módulos/pacotes,
+shell do painel e schema do Núcleo (Fase 1). Próximo: implementar os services e telas
+do Núcleo.

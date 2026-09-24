@@ -7,3 +7,26 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Torino HMS — notas do projeto
+
+- Plano e decisões: `docs/PLANO.md`. Leia antes de mudanças estruturais.
+- Stack: Next.js 16 (App Router) + TypeScript + Tailwind v4 + shadcn/ui + Supabase.
+- Região obrigatória: app `gru1` (Vercel) e banco `sa-east-1` (Supabase), co-localizados.
+- Fuso horário `TZ=America/Sao_Paulo` (definido em `.env.local`/`.env.example` e nas
+  variáveis da Vercel). Sem isso, slots e datas ficam deslocados em servidores UTC.
+- Multi-tenant: **toda** tabela de domínio tem `tenant_id` + RLS. Nunca desabilite RLS.
+- Superadmin tem dois modos: **Plataforma** (sem tenant no cookie `torino_active_tenant` →
+  só Painel + Tenants) e **Tenant** (cookie setado via "Entrar" → menu clínico + banner de saída).
+  O tenant ativo vem do cookie; não há auto-seleção.
+- Server Components acessam o banco direto (`@/lib/supabase/server`); evite waterfalls via API routes.
+- Next 16: o antigo `middleware.ts` agora é `src/proxy.ts` (`export function proxy`).
+
+### Comandos
+
+```bash
+npm run dev      # desenvolvimento
+npm run build    # build de produção
+npm run lint     # ESLint (rodar antes de concluir mudanças)
+```
+
