@@ -62,8 +62,20 @@ npm run start    # servir o build
 npm run lint     # ESLint
 ```
 
+## Deploy
+
+- **Produção**: https://torino-hms.vercel.app (Vercel Hobby, região `gru1`).
+- **Deploy automático**: o repositório GitHub está conectado — cada `git push` na `master` publica.
+- **Região/fuso**: `vercel.json` fixa `gru1`; o fuso `America/Sao_Paulo` é definido em
+  `src/instrumentation.ts` (o nome `TZ` é reservado como env var na Vercel).
+- Configure as variáveis de ambiente em Production/Preview na Vercel.
+
 ## Status
 
-Fase 0 (fundação) concluída: scaffold, camada Supabase, catálogo de módulos/pacotes,
-shell do painel e schema do Núcleo (Fase 1). Próximo: implementar os services e telas
-do Núcleo.
+Módulos implementados: **Núcleo** (tenants/pacotes/módulos, auth, pacientes, profissionais,
+agenda, atendimentos/prescrição); **hospitalar** (leitos, exames, laudos, **engenharia clínica**
+com rastreabilidade de entrega/recolhimento por setor, contratos, tecnovigilância e indicadores);
+**farmácia/estoque**; **compras**; **financeiro**; **convênios**; **relatórios**;
+**Help Desk + Base de conhecimento**; **Billing do SaaS** (assinaturas, faturas, pagamentos,
+cupons) e **Equipe/convites**. Detalhes em [`docs/INVENTARIO.md`](./docs/INVENTARIO.md) e
+[`docs/PLANO.md`](./docs/PLANO.md).
