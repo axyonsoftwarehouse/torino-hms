@@ -1,6 +1,4 @@
-import Link from "next/link";
-
-import { buttonVariants } from "@/components/ui/button";
+import { LandingCta } from "@/components/landing-cta";
 
 export default function Home() {
   return (
@@ -9,21 +7,16 @@ export default function Home() {
         <p className="text-sm font-medium uppercase tracking-widest text-primary">
           SaaS multi-tenant para saúde
         </p>
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">Torino HMS</h1>
+        <h1 className="font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
+          Torino HMS
+        </h1>
         <p className="mx-auto max-w-xl text-balance text-muted-foreground">
           Gestão hospitalar e clínica modular. Um núcleo para clínicas, laboratórios,
           consultórios odontológicos e hospitais — cada um habilitando só os módulos
           que precisa.
         </p>
       </div>
-      <div className="flex flex-wrap items-center justify-center gap-3">
-        <Link href="/app" className={buttonVariants()}>
-          Entrar no painel
-        </Link>
-        <Link href="/login" className={buttonVariants({ variant: "outline" })}>
-          Fazer login
-        </Link>
-      </div>
+      <LandingCta />
     </main>
   );
 }
