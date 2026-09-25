@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { SignupForm } from "@/components/signup-form";
+import { getSession } from "@/modules/core/session";
 
 export const dynamic = "force-dynamic";
 
@@ -9,8 +11,12 @@ export default async function SignupPage({
 }: {
   searchParams: Promise<{ redirect?: string }>;
 }) {
-  const { redirect } = await searchParams;
-  const redirectTo = redirect && redirect.startsWith("/") ? redirect : "/app";
+  const { redirect: redirectParam } = await searchParams;
+  const redirectTo =
+    redirectParam && redirectParam.startsWith("/") ? redirectParam : "/app";
+
+  const session = await getSession();
+  if (session) redirect(redirectTo);
 
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-4 px-6 py-24">

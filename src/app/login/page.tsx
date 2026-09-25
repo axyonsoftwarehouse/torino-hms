@@ -1,89 +1,26 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { LoginForm } from "@/components/login-form";
+import { getSession } from "@/modules/core/session";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { createClient } from "@/lib/supabase/client";
+export const dynamic = "force-dynamic";
 
-export default function LoginPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ redirect?: string }>;
+}) {
+  const { redirect: redirectParam } = await searchParams;
+  const target =
+    redirectParam && redirectParam.startsWith("/") ? redirectParam : "/app";
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    const supabase = createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    setLoading(false);
-
-    if (signInError) {
-      setError(signInError.message);
-      return;
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    const redirect = params.get("redirect");
-    router.push(redirect && redirect.startsWith("/") ? redirect : "/app");
-    router.refresh();
-  }
+  // Usuário já autenticado não deve ver a tela de login.
+  const session = await getSession();
+  if (session) redirect(target);
 
   return (
     <main className="flex flex-1 items-center justify-center px-6 py-24">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Entrar no Torino HMS</CardTitle>
-          <CardDescription>Acesse com suas credenciais.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="space-y-2">
-              <Label htmlFor="email">E-mail</Label>
-              <Input
-                id="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
-              <Input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            </div>
-            {error ? <p className="text-sm text-destructive">{error}</p> : null}
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Entrando..." : "Entrar"}
-            </Button>
-            <p className="text-center text-sm text-muted-foreground">
-              Não tem conta?{" "}
-              <a href="/signup" className="font-medium text-primary hover:underline">
-                Criar conta
-              </a>
-            </p>
-          </form>
-        </CardContent>
-      </Card>
+      <LoginForm redirectTo={target} />
     </main>
   );
 }
