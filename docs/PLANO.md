@@ -305,6 +305,9 @@ e conformidade sanitária. Sem isso, há risco regulatório e de segurança assi
   ausentes no projeto de referência).
 - **Convites de usuário** (por link/token, sem depender de SMTP) — *implementado*.
 - **Cupons de desconto** (no billing do SaaS) — *implementado* (inspirado no Perfect SaaS).
+- **Frota / Ambulância** — *implementado* (inspirado no Perfex Fleet Management + `ambulance` do
+  original): veículos (ambulâncias/administrativos), motoristas (CNH), viagens, manutenção,
+  combustível, documentos e relatórios de custos/vencimentos.
 - **Backlog inspirado no Perfect SaaS** (multi-tenancy): **programa de
   afiliados/referrals** (comissões/payouts), **domínios personalizados por tenant**, **templates de
   e-mail**, **modo manutenção**, **localização/i18n** e **site institucional (Front CMS)**.

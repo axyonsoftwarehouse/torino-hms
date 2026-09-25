@@ -130,7 +130,7 @@ Infra: Next.js 16 (App Router) + Supabase (Postgres/RLS/Auth) + Tailwind v4 + sh
 ### B9. Ambulância
 | Tabela(s) referência | Status | Observação |
 |---|---|---|
-| `ambulance`, `ambulance_rates`, `ambulance_bookings`, `ambulance_payments` | ⛔ | Módulo Ambulância completo |
+| `ambulance`, `ambulance_rates`, `ambulance_bookings`, `ambulance_payments` | ✅ | **Frota/Ambulância** (`/app/fleet`): veículos, motoristas, viagens, manutenção, combustível e documentos (inspirado no Fleet Management) |
 
 ### B10. Comunicação
 | Tabela(s) referência | Status | Observação |

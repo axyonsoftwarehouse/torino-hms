@@ -40,7 +40,7 @@ export const MODULES = [
   { key: "nurse", label: "Enfermagem", category: "hospital", description: "Equipe de enfermagem" },
   { key: "bed", label: "Leitos", category: "hospital", description: "Internação e leitos" },
   { key: "emergency", label: "Emergência", category: "hospital", description: "Pronto atendimento" },
-  { key: "ambulance", label: "Ambulância", category: "hospital", description: "Transporte e remoções" },
+  { key: "ambulance", label: "Frota / Ambulância", category: "hospital", description: "Veículos, viagens e manutenção da frota" },
   { key: "equipment", label: "Engenharia Clínica", category: "hospital", description: "Equipamentos, manutenção e calibração" },
   { key: "insurance", label: "Convênios", category: "financial", description: "Seguradoras e planos" },
   { key: "finance", label: "Financeiro", category: "financial", description: "Faturas, recebimentos e despesas" },
