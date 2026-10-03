@@ -9,12 +9,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 
+const DEMO_EMAIL = "demo@torino.com.br";
+const DEMO_PASSWORD = "Demo@123456";
+
 export function LoginForm({ redirectTo }: { redirectTo: string }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  function fillDemoCredentials() {
+    setEmail(DEMO_EMAIL);
+    setPassword(DEMO_PASSWORD);
+    setError(null);
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -79,6 +88,29 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
             </a>
           </p>
         </form>
+        <div className="mt-6 rounded-lg border border-dashed border-border bg-muted/40 p-3 text-sm">
+          <div className="flex items-center justify-between gap-2">
+            <span className="font-medium">Acesso de demonstração</span>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={fillDemoCredentials}
+            >
+              Usar credenciais
+            </Button>
+          </div>
+          <dl className="mt-2 space-y-1 text-xs text-muted-foreground">
+            <div className="flex gap-2">
+              <dt className="font-medium text-foreground/80">E-mail:</dt>
+              <dd className="font-mono">{DEMO_EMAIL}</dd>
+            </div>
+            <div className="flex gap-2">
+              <dt className="font-medium text-foreground/80">Senha:</dt>
+              <dd className="font-mono">{DEMO_PASSWORD}</dd>
+            </div>
+          </dl>
+        </div>
       </CardContent>
     </Card>
   );
