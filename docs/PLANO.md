@@ -27,7 +27,7 @@ Mantemos esse modelo de negócio, refazendo a engenharia.
 | # | Decisão | Escolha |
 |---|---------|---------|
 | Q1 | Domínio / escopo | HMS modular; começa com núcleo e escala por módulos |
-| Q2/Q7 | Stack | **Next.js 15 (App Router, TS) + Supabase + Tailwind + shadcn/ui** |
+| Q2/Q7 | Stack | **Next.js 16 (App Router, TS) + Supabase + Tailwind + shadcn/ui** |
 | Q3 | Multi-tenancy | **Sim**, multi-tenant como o original |
 | Q4 | Natureza | **Produto comercial SaaS** |
 | Q5 | Entregável inicial | Documento de planejamento (`docs/PLANO.md`) + fases |
@@ -53,8 +53,9 @@ Mantemos esse modelo de negócio, refazendo a engenharia.
 
 ### 3.1 Stack
 
-- **App**: Next.js 15 (App Router, React Server Components, TypeScript).
-- **UI**: Tailwind CSS + shadcn/ui (dashboard estilo AdminLTE modernizado).
+- **App**: Next.js 16 (App Router, React Server Components, TypeScript, React 19).
+- **UI**: Tailwind CSS v4 + shadcn/ui (Base UI) — dashboard estilo AdminLTE modernizado.
+  > Nota Next 16: o antigo `middleware.ts` virou `src/proxy.ts` (`export function proxy`).
 - **Dados/Auth/Storage**: Supabase (Postgres, Auth, RLS, Storage, Realtime, Edge Functions).
 - **Deploy**: Vercel (serverless) no início; região `gru1`.
 - **Jobs assíncronos**: Supabase Edge Functions / cron (SMS, e-mail, IA) — sempre fora do
@@ -162,43 +163,51 @@ valores) e **não possui FKs** nem `created_at`/soft delete. **Não copiamos.** 
 
 ## 6. Roadmap por fases
 
-### Fase 0 — Fundação
-- Repositório, lint/format (ESLint, Prettier), CI.
-- Projeto Supabase (região SP), Supabase local, migrations.
-- Auth (Supabase Auth) + RBAC + tenancy + **RLS base**.
-- Design system (Tailwind + shadcn/ui), layout de dashboard.
+> Status atual: commit `35bff36`. Legenda: ✅ entregue · 🟡 parcial · ⛔ não iniciado.
+> Detalhamento do que falta em `docs/RELATORIO-ESCOPO.md` §11.
 
-### Fase 1 — MVP Núcleo
+### Fase 0 — Fundação — ✅ (exceto CI)
+- Repositório, lint (ESLint). **CI ainda pendente.**
+- Projeto Supabase (região SP), Supabase local, migrations (18 migrations, 62 tabelas).
+- Auth (Supabase Auth) + RBAC + tenancy + **RLS base** (26 policies).
+- Design system (Tailwind v4 + shadcn/ui), layout de dashboard.
+
+### Fase 1 — MVP Núcleo — ✅
 - Tenant/Hospital + pacotes + módulos + limites.
-- Usuários, perfis, convites.
+- Usuários, perfis, convites (por link).
 - Pacientes (cadastro pela recepção) + histórico.
 - Profissionais + médicos.
-- Agenda/consultas.
+- Agenda/consultas (+ detecção de conflito).
 - Prontuário/atendimento + prescrição.
 - Financeiro básico (pagamentos/despesas) + relatórios.
-- E-mail transacional.
+- E-mail transacional 🟡 (sem templates/regras).
 - **Marco**: um hospital real consegue operar o dia a dia.
 
-### Fase 2 — Portal & Presença
+### Fase 2 — Portal & Presença — ⛔
 - Portal do paciente (agendar, ver resultados).
 - Site institucional do tenant.
 - Auto-cadastro de paciente (com verificação).
 - Notificações (e-mail) e base de i18n.
 
-### Fase 3 — Módulos de Diagnóstico/Clínicos
-- Laboratório, Radiologia, Farmácia/Estoque, Odontologia (odontograma e planos).
-- Estoque + compras + fornecedores + alertas.
+### Fase 3 — Módulos de Diagnóstico/Clínicos — 🟡
+- Laboratório ✅, Radiologia ✅, Farmácia/Estoque ✅; **Odontologia ⛔**.
+- Estoque + compras + fornecedores + alertas ✅.
 
-### Fase 4 — Hospitalar
-- Leitos/enfermaria, emergência, ambulância, centro cirúrgico, folha de pagamento,
-  seguros, presença/férias.
+### Fase 4 — Hospitalar — 🟡
+- Leitos/enfermaria ✅, ambulância/frota ✅, convênios ✅.
+- **Emergência ⛔, centro cirúrgico ⛔, folha de pagamento/ponto/férias ⛔.**
 
-### Fase 5 — IA, Billing e Escala
+### Fase 4.5 — Engenharia Clínica — ✅
+- Equipamentos (ANVISA/criticidade), planos de manutenção, OS (preventiva/corretiva/
+  calibração/inspeção), rastreabilidade por setor, contratos, tecnovigilância e
+  indicadores. **Pendente: MTBF completo.**
+
+### Fase 5 — IA, Billing e Escala — ⛔
 - IA: análise de imagem, resumo do paciente.
-- Billing automatizado (**Asaas**: Pix/boleto/assinatura recorrente).
+- Billing automatizado (**Asaas**: Pix/boleto/assinatura recorrente) — billing manual ✅.
 - Observabilidade, backups PITR, escalabilidade.
 
-### Fase 6 — Lançamento comercial
+### Fase 6 — Lançamento comercial — ⛔
 - Migrar para **Vercel Pro + Supabase Pro** (mesma região/região, mesmo código).
 - Conformidade LGPD (DPA, política de privacidade, consentimento, logs de acesso).
 - Onboarding de clientes e suporte.
@@ -227,16 +236,20 @@ Dados de saúde são **dados sensíveis**. Desde o design:
 
 ---
 
-## 9. Próximos passos (após aprovação deste plano)
+## 9. Próximos passos
 
-1. Revisar/ajustar este documento.
-2. Inicializar o scaffold:
-   - `create-next-app` (TS, App Router, Tailwind), shadcn/ui, ESLint/Prettier.
-   - Estrutura por módulos (`src/modules/<modulo>/...`).
-   - Projeto Supabase (SP), `supabase/migrations/` com o schema do **Núcleo (Fase 1)**.
-   - Setup de tenancy + RLS + seed de um tenant de demonstração.
-3. Definir o schema da Fase 1 tabela a tabela.
-4. Configurar CI/CD e ambientes (dev/prod) com região co-localizada.
+O scaffold (Fases 0–1) já está entregue. Prioridades atuais, detalhadas em
+`docs/RELATORIO-ESCOPO.md` §11:
+
+1. **P0 — Fundação de engenharia**: Vitest, CI (lint + typecheck + test),
+   error tracking e geração de tipos do Supabase.
+2. **P1 — Completar o vendável**: `/app/settings` (hoje placeholder), gateways de
+   pagamento (Pix/cartão), catálogo CID/sintomas/tratamentos, segurança de login
+   (`login_attempts`) e e-mail com templates.
+3. **P2 — Módulos prometidos**: Odontologia, emergência, centro cirúrgico, RH,
+   estoque genérico de suprimentos e consumos vinculados ao leito.
+4. **P3 — Diferenciais**: portal do paciente, site institucional, SMS/WhatsApp,
+   chat, IA e billing Asaas.
 
 ---
 
