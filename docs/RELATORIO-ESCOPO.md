@@ -166,13 +166,22 @@ docs/                     # PLANO.md, INVENTARIO.md, este relatório
 - **Superadmin em dois modos**: **Plataforma** (sem cookie `torino_active_tenant` →
   só Painel + Tenants) e **Tenant** (cookie setado via "Entrar" → menu clínico). O
   tenant ativo **vem do cookie**; não há auto-seleção (`src/modules/core/session.ts`).
-- **RBAC** por `profiles.role` + RLS. **Gating de menu por módulo** via
-  `getEnabledModules` + `requiredModuleForPath` (`src/modules/core/access.ts`).
+- **RBAC dirigido por dados** (migrations `20261006000001`–`20261006000004`): matriz
+  em `public.role_module_permissions` (papel × módulo → read/write), mapeamento de
+  tabelas em `public.table_module` e aplicação por policies **RESTRICTIVE** por tabela
+  (somam-se ao isolamento por tenant — nunca concedem). Helpers `can_read_module` /
+  `can_write_module` / `is_staff`; trigger `trg_profiles_guard` impede escalada de
+  `role`. O papel `patient` (portal — fase 2) não acessa dados do tenant. `anon` tem
+  privilégios mínimos; RLS é habilitado automaticamente em tabelas novas (fail-closed).
+- **Gating de menu por módulo** via `getEnabledModules` + `requiredModuleForPath`
+  (`src/modules/core/access.ts`).
 - **Limites de pacote** (`patient_limit`, `professional_limit`) no tenant.
 
 ### 9. Modelo de dados
 
-**Números atuais**: **18 migrations**, **62 tabelas**, **26 policies de RLS**.
+**Números atuais**: **22 migrations**, **64 tabelas**. RLS habilitado em todas as
+tabelas, com policies de isolamento por tenant + policies **RESTRICTIVE** de RBAC por
+módulo (ver seção 8).
 
 Schema redesenhado (não copiado do legado): PKs `uuid`, tipos corretos
 (`timestamptz`, `numeric`, `boolean`, `jsonb`), FK explícitas, `created_at/updated_at`,
