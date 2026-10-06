@@ -15,6 +15,9 @@ import { ACTIVE_TENANT_COOKIE, requireSession } from "@/modules/core/session";
 import { tenantSchema } from "./schema";
 
 export async function setActiveTenant(tenantId: string) {
+  const session = await requireSession();
+  if (!session.isSuperadmin) return;
+
   const cookieStore = await cookies();
   cookieStore.set(ACTIVE_TENANT_COOKIE, tenantId, {
     path: "/",

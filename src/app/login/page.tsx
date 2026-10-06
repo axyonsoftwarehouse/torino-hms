@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { LoginForm } from "@/components/login-form";
+import { safeRedirectPath } from "@/lib/safe-redirect";
 import { getSession } from "@/modules/core/session";
 
 export const dynamic = "force-dynamic";
@@ -11,8 +12,7 @@ export default async function LoginPage({
   searchParams: Promise<{ redirect?: string }>;
 }) {
   const { redirect: redirectParam } = await searchParams;
-  const target =
-    redirectParam && redirectParam.startsWith("/") ? redirectParam : "/app";
+  const target = safeRedirectPath(redirectParam);
 
   // Usuário já autenticado não deve ver a tela de login.
   const session = await getSession();

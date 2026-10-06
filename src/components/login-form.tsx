@@ -9,8 +9,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/lib/supabase/client";
 
-const DEMO_EMAIL = "demo@torino.com.br";
-const DEMO_PASSWORD = "Demo@123456";
+const DEMO_EMAIL = process.env.NEXT_PUBLIC_DEMO_EMAIL ?? "";
+const DEMO_PASSWORD = process.env.NEXT_PUBLIC_DEMO_PASSWORD ?? "";
+const DEMO_ENABLED =
+  process.env.NEXT_PUBLIC_DEMO_LOGIN === "true" &&
+  DEMO_EMAIL.length > 0 &&
+  DEMO_PASSWORD.length > 0;
 
 export function LoginForm({ redirectTo }: { redirectTo: string }) {
   const router = useRouter();
@@ -88,7 +92,8 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
             </a>
           </p>
         </form>
-        <div className="mt-6 rounded-lg border border-dashed border-border bg-muted/40 p-3 text-sm">
+        {DEMO_ENABLED ? (
+          <div className="mt-6 rounded-lg border border-dashed border-border bg-muted/40 p-3 text-sm">
           <div className="flex items-center justify-between gap-2">
             <span className="font-medium">Acesso de demonstração</span>
             <Button
@@ -110,7 +115,8 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
               <dd className="font-mono">{DEMO_PASSWORD}</dd>
             </div>
           </dl>
-        </div>
+          </div>
+        ) : null}
       </CardContent>
     </Card>
   );

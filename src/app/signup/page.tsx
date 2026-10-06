@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { SignupForm } from "@/components/signup-form";
+import { safeRedirectPath } from "@/lib/safe-redirect";
 import { getSession } from "@/modules/core/session";
 
 export const dynamic = "force-dynamic";
@@ -12,8 +13,7 @@ export default async function SignupPage({
   searchParams: Promise<{ redirect?: string }>;
 }) {
   const { redirect: redirectParam } = await searchParams;
-  const redirectTo =
-    redirectParam && redirectParam.startsWith("/") ? redirectParam : "/app";
+  const redirectTo = safeRedirectPath(redirectParam);
 
   const session = await getSession();
   if (session) redirect(redirectTo);
