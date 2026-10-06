@@ -64,6 +64,7 @@ npm run lint     # ESLint
 
 ## Deploy
 
+- **Repositório**: https://github.com/axyonsoftwarehouse/torino-hms
 - **Produção**: https://torino-hms.vercel.app (Vercel Hobby, região `gru1`).
 - **Deploy automático**: o repositório GitHub está conectado — cada `git push` na `master` publica.
 - **Região/fuso**: `vercel.json` fixa `gru1`; o fuso `America/Sao_Paulo` é definido em

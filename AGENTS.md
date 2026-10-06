@@ -13,6 +13,8 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Plano e decisões: `docs/PLANO.md`. Leia antes de mudanças estruturais.
 - Stack: Next.js 16 (App Router) + TypeScript + Tailwind v4 + shadcn/ui + Supabase.
 - Região obrigatória: app `gru1` (Vercel) e banco `sa-east-1` (Supabase), co-localizados.
+- Repositório: `axyonsoftwarehouse/torino-hms` (público) — remote `origin`; deploy automático
+  na Vercel a cada push na branch `master`.
 - Fuso horário `TZ=America/Sao_Paulo` (definido em `.env.local`/`.env.example` e nas
   variáveis da Vercel). Sem isso, slots e datas ficam deslocados em servidores UTC.
 - Multi-tenant: **toda** tabela de domínio tem `tenant_id` + RLS. Nunca desabilite RLS.

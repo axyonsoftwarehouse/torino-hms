@@ -116,6 +116,7 @@ Cada tenant contrata um **pacote** que habilita módulos e aplica **limites**
 | UI | Tailwind CSS v4 + shadcn/ui (Base UI) + lucide-react + sonner |
 | Dados/Auth/Storage | **Supabase** (Postgres, Auth, RLS) |
 | Deploy | Vercel (`gru1`) + Supabase (`sa-east-1`) |
+| Repositório | GitHub `axyonsoftwarehouse/torino-hms` (público) |
 | Validação | Zod |
 | Fuso | `TZ=America/Sao_Paulo` fixado em `src/instrumentation.ts` |
 
@@ -131,6 +132,8 @@ Cada tenant contrata um **pacote** que habilita módulos e aplica **limites**
 - Runtime Node (não Edge) para acesso a banco.
 
 ### 7. Estrutura do repositório
+
+**GitHub**: `axyonsoftwarehouse/torino-hms` (público) — branch de produção `master`.
 
 ```
 src/
@@ -185,7 +188,7 @@ convites e cupons.
 | Item | Situação | Impacto |
 |---|---|---|
 | **Testes automatizados** | **0 arquivos de teste** (sem Vitest/Jest) | Alto risco de regressão |
-| **CI/CD** | Sem pipeline; deploy automático por push na `master` | Sem gate de qualidade |
+| **CI/CD** | Sem pipeline; deploy automático via integração Git da Vercel (push na `master`) | Sem gate de qualidade |
 | **Observabilidade** | Sem monitoramento/error tracking (Sentry etc.) | Baixa visibilidade de falhas |
 | **`/app/settings`** | Placeholder | Configuração do tenant indisponível |
 | **Auditoria** | `audit_logs` existe, sem UI | Exigência LGPD |
