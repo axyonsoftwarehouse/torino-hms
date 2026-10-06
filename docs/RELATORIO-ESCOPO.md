@@ -199,6 +199,7 @@ convites e cupons.
 | **Testes automatizados** | **0 arquivos de teste** (sem Vitest/Jest) | Alto risco de regressão |
 | **CI/CD** | Sem pipeline; deploy automático via integração Git da Vercel (push na `master`) | Sem gate de qualidade |
 | **Observabilidade** | Sem monitoramento/error tracking (Sentry etc.) | Baixa visibilidade de falhas |
+| **Rate limiting** | Sem controle próprio; depende dos limites nativos do Supabase Auth | Médio para abuso de credenciais |
 | **`/app/settings`** | Placeholder | Configuração do tenant indisponível |
 | **Auditoria** | `audit_logs` existe, sem UI | Exigência LGPD |
 | **PDF / impressão** | Laudos/relatórios sem PDF padronizado | Operação manual |

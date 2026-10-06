@@ -1,3 +1,5 @@
+import { headers } from "next/headers";
+
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { InviteForm } from "@/components/invite-form";
 import { PageHeader } from "@/components/page-header";
@@ -22,12 +24,23 @@ import { TEAM_ROLES, TEAM_ROLE_LABELS, type TeamRole } from "@/modules/team/sche
 
 export const dynamic = "force-dynamic";
 
+async function resolveBaseUrl(): Promise<string> {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL;
+  if (configured) return configured.replace(/\/+$/, "");
+
+  const headerList = await headers();
+  const host = headerList.get("x-forwarded-host") ?? headerList.get("host");
+  if (!host) return "";
+  const proto = headerList.get("x-forwarded-proto") ?? "https";
+  return `${proto}://${host}`;
+}
+
 export default async function TeamPage() {
   const session = await requireSession();
   const canManage = session.isSuperadmin || session.profile?.role === "tenant_admin";
   const members = await listTeamMembers(session.activeTenantId);
   const invites = canManage ? await listInvites(session.activeTenantId) : [];
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
+  const baseUrl = await resolveBaseUrl();
 
   return (
     <div className="space-y-6">
