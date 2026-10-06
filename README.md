@@ -60,6 +60,7 @@ npm run dev      # servidor de desenvolvimento
 npm run build    # build de produção
 npm run start    # servir o build
 npm run lint     # ESLint
+npm run test     # testes (Vitest)
 ```
 
 ## Deploy

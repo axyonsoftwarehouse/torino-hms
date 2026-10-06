@@ -196,8 +196,8 @@ convites e cupons.
 
 | Item | Situação | Impacto |
 |---|---|---|
-| **Testes automatizados** | **0 arquivos de teste** (sem Vitest/Jest) | Alto risco de regressão |
-| **CI/CD** | Sem pipeline; deploy automático via integração Git da Vercel (push na `master`) | Sem gate de qualidade |
+| **Testes automatizados** | Cobertura inicial com Vitest (utilitários, gating de módulo e schemas); CI roda lint + test | Ampliar para Server Actions e RLS e2e |
+| **CI/CD** | GitHub Actions roda lint + test (`.github/workflows/ci.yml`); deploy automático via Vercel (push na `master`) | — |
 | **Observabilidade** | Sem monitoramento/error tracking (Sentry etc.) | Baixa visibilidade de falhas |
 | **Rate limiting** | Sem controle próprio; depende dos limites nativos do Supabase Auth | Médio para abuso de credenciais |
 | **`/app/settings`** | Placeholder | Configuração do tenant indisponível |

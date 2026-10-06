@@ -30,5 +30,6 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 npm run dev      # desenvolvimento
 npm run build    # build de produção
 npm run lint     # ESLint (rodar antes de concluir mudanças)
+npm run test     # Vitest (rodar antes de concluir mudanças)
 ```
 
