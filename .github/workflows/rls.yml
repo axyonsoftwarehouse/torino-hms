@@ -1,0 +1,40 @@
+name: RLS e2e
+
+# Execução manual (workflow_dispatch). Após validar, pode-se adicionar gatilhos
+# automáticos em push/PR que toquem em supabase/migrations/** ou tests/rls/**.
+on:
+  workflow_dispatch:
+
+jobs:
+  rls:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Install
+        run: npm ci
+
+      - name: Start Supabase
+        run: supabase start
+
+      - name: Reset database (migrations + seed)
+        run: supabase db reset
+
+      - name: Export test env
+        run: |
+          eval "$(supabase status -o env | sed 's/^/export /')"
+          echo "SUPABASE_TEST_URL=$API_URL" >> "$GITHUB_ENV"
+          echo "SUPABASE_TEST_ANON_KEY=$ANON_KEY" >> "$GITHUB_ENV"
+          echo "SUPABASE_TEST_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY" >> "$GITHUB_ENV"
+
+      - name: Run RLS tests
+        run: npm run test:rls

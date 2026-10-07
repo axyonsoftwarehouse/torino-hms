@@ -196,7 +196,7 @@ convites e cupons.
 
 | Item | Situação | Impacto |
 |---|---|---|
-| **Testes automatizados** | Cobertura inicial com Vitest (utilitários, gating de módulo e schemas); CI roda lint + test | Ampliar para Server Actions e RLS e2e |
+| **Testes automatizados** | Vitest: utilitários, gating de módulo, schemas e Server Actions (42 testes); e2e de RLS opt-in (`npm run test:rls`, Supabase local); CI roda lint + test | Ampliar cobertura de ações |
 | **CI/CD** | GitHub Actions roda lint + test (`.github/workflows/ci.yml`); deploy automático via Vercel (push na `master`) | — |
 | **Observabilidade** | Sem monitoramento/error tracking (Sentry etc.) | Baixa visibilidade de falhas |
 | **Rate limiting** | Sem controle próprio; depende dos limites nativos do Supabase Auth | Médio para abuso de credenciais |

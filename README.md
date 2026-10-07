@@ -63,6 +63,11 @@ npm run lint     # ESLint
 npm run test     # testes (Vitest)
 ```
 
+Os testes e2e de RLS/RBAC são opcionais: exigem um Supabase de teste local
+(`npx supabase start`) e as variáveis `SUPABASE_TEST_URL`,
+`SUPABASE_TEST_ANON_KEY` e `SUPABASE_TEST_SERVICE_ROLE_KEY`; então rode
+`npm run test:rls`.
+
 ## Deploy
 
 - **Repositório**: https://github.com/axyonsoftwarehouse/torino-hms
