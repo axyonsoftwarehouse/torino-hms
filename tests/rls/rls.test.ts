@@ -77,6 +77,7 @@ describe.skipIf(!hasEnv)("RLS / RBAC (e2e)", () => {
 
     await createUser(`admin-a-${run}@test.local`, tenantA, "tenant_admin");
     await createUser(`patient-a-${run}@test.local`, tenantA, "patient");
+    await createUser(`prof-a-${run}@test.local`, tenantA, "professional");
     await createUser(`admin-b-${run}@test.local`, tenantB, "tenant_admin");
 
     const patient = await admin
@@ -142,5 +143,44 @@ describe.skipIf(!hasEnv)("RLS / RBAC (e2e)", () => {
     const { data, error } = await patient.from("audit_logs").select("id");
     expect(error).toBeNull();
     expect(data ?? []).toHaveLength(0);
+  });
+
+  it("tenant_admin edita os dados do próprio tenant", async () => {
+    const adminA = await signIn(`admin-a-${run}@test.local`);
+    const { error } = await adminA.rpc("update_own_tenant", {
+      p_tenant_id: tenantA,
+      p_name: "RLS A Editado",
+      p_email: "a@test.local",
+      p_phone: null,
+      p_document: null,
+      p_address: null,
+    });
+    expect(error).toBeNull();
+  });
+
+  it("nega edição do tenant para papel sem permissão", async () => {
+    const prof = await signIn(`prof-a-${run}@test.local`);
+    const { error } = await prof.rpc("update_own_tenant", {
+      p_tenant_id: tenantA,
+      p_name: "Tentativa",
+      p_email: null,
+      p_phone: null,
+      p_document: null,
+      p_address: null,
+    });
+    expect(error).not.toBeNull();
+  });
+
+  it("nega edição de outro tenant", async () => {
+    const adminB = await signIn(`admin-b-${run}@test.local`);
+    const { error } = await adminB.rpc("update_own_tenant", {
+      p_tenant_id: tenantA,
+      p_name: "Invasão",
+      p_email: null,
+      p_phone: null,
+      p_document: null,
+      p_address: null,
+    });
+    expect(error).not.toBeNull();
   });
 });

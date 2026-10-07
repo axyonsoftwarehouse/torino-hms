@@ -200,7 +200,7 @@ convites e cupons.
 | **CI/CD** | GitHub Actions roda lint + test (`.github/workflows/ci.yml`); deploy automático via Vercel (push na `master`) | — |
 | **Observabilidade** | Sem monitoramento/error tracking (Sentry etc.) | Baixa visibilidade de falhas |
 | **Rate limiting** | Sem controle próprio; depende dos limites nativos do Supabase Auth | Médio para abuso de credenciais |
-| **`/app/settings`** | Placeholder | Configuração do tenant indisponível |
+| **`/app/settings`** | Edição dos dados do tenant (nome/contato) via RPC `update_own_tenant` + pacote/módulos | Faltam preferências avançadas (fuso, notificações) |
 | **Auditoria** | `audit_logs` alimentado por trigger e UI em `/app/audit` (admin) | Ampliar retenção/exportação p/ LGPD |
 | **PDF / impressão** | Laudos/relatórios sem PDF padronizado | Operação manual |
 | **Paginação/busca** | Padrão só em Pacientes | UX inconsistente nas listas |

@@ -12,7 +12,7 @@ import {
 } from "@/modules/core/catalog";
 import { ACTIVE_TENANT_COOKIE, requireSession } from "@/modules/core/session";
 
-import { tenantSchema } from "./schema";
+import { tenantSchema, tenantSettingsSchema } from "./schema";
 
 export async function setActiveTenant(tenantId: string) {
   const session = await requireSession();
@@ -159,6 +159,40 @@ export async function updateTenant(
   revalidatePath("/app/tenants");
   revalidatePath(`/app/tenants/${id}`);
   return { ok: true, message: "Tenant atualizado." };
+}
+
+export async function updateTenantSettings(
+  _prev: TenantActionState,
+  formData: FormData,
+): Promise<TenantActionState> {
+  const session = await requireSession();
+  if (!(session.isSuperadmin || session.profile?.role === "tenant_admin")) {
+    return { ok: false, error: "Sem permissão para editar o tenant." };
+  }
+  if (!session.activeTenantId) {
+    return { ok: false, error: "Nenhum tenant ativo." };
+  }
+
+  const parsed = tenantSettingsSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
+  }
+
+  const v = parsed.data;
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("update_own_tenant", {
+    p_tenant_id: session.activeTenantId,
+    p_name: v.name,
+    p_email: v.email,
+    p_phone: v.phone,
+    p_document: v.document,
+    p_address: v.address,
+  });
+
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath("/app/settings");
+  return { ok: true, message: "Dados atualizados com sucesso." };
 }
 
 export async function updateTenantModules(formData: FormData): Promise<void> {

@@ -32,7 +32,12 @@ vi.mock("next/headers", () => ({
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
 
-import { createTenant, enterTenant, setActiveTenant } from "@/modules/tenants/actions";
+import {
+  createTenant,
+  enterTenant,
+  setActiveTenant,
+  updateTenantSettings,
+} from "@/modules/tenants/actions";
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -105,5 +110,49 @@ describe("createTenant", () => {
 
     expect(mocks.from).toHaveBeenCalledWith("tenants");
     expect(mocks.redirect).toHaveBeenCalledWith("/app/tenants/t1");
+  });
+});
+
+function settingsForm() {
+  const formData = new FormData();
+  formData.set("name", "Clínica Teste");
+  formData.set("email", "contato@teste.com");
+  return formData;
+}
+
+describe("updateTenantSettings", () => {
+  const tenantAdmin = {
+    isSuperadmin: false,
+    profile: { role: "tenant_admin" },
+    activeTenantId: "t1",
+  };
+  const professional = {
+    isSuperadmin: false,
+    profile: { role: "professional" },
+    activeTenantId: "t1",
+  };
+
+  it("bloqueia papéis sem permissão", async () => {
+    mocks.requireSession.mockResolvedValue(professional);
+    const result = await updateTenantSettings({ ok: false }, settingsForm());
+    expect(result.ok).toBe(false);
+    expect(mocks.rpc).not.toHaveBeenCalled();
+  });
+
+  it("exige tenant ativo", async () => {
+    mocks.requireSession.mockResolvedValue({ ...tenantAdmin, activeTenantId: null });
+    const result = await updateTenantSettings({ ok: false }, settingsForm());
+    expect(result.ok).toBe(false);
+  });
+
+  it("chama a RPC com os dados do tenant", async () => {
+    mocks.requireSession.mockResolvedValue(tenantAdmin);
+    mocks.rpc.mockResolvedValue({ data: null, error: null });
+    const result = await updateTenantSettings({ ok: false }, settingsForm());
+    expect(result.ok).toBe(true);
+    expect(mocks.rpc).toHaveBeenCalledWith(
+      "update_own_tenant",
+      expect.objectContaining({ p_tenant_id: "t1", p_name: "Clínica Teste" }),
+    );
   });
 });

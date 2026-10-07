@@ -32,3 +32,13 @@ export const tenantSchema = z.object({
 });
 
 export type TenantInput = z.infer<typeof tenantSchema>;
+
+export const tenantSettingsSchema = z.object({
+  name: z.string().trim().min(2, "Informe o nome"),
+  email: z.string().trim().default(""),
+  phone: z.string().trim().default(""),
+  document: z.string().trim().default(""),
+  address: z.string().trim().default(""),
+});
+
+export type TenantSettingsInput = z.infer<typeof tenantSettingsSchema>;
