@@ -201,7 +201,7 @@ convites e cupons.
 | **Observabilidade** | Sem monitoramento/error tracking (Sentry etc.) | Baixa visibilidade de falhas |
 | **Rate limiting** | Sem controle próprio; depende dos limites nativos do Supabase Auth | Médio para abuso de credenciais |
 | **`/app/settings`** | Placeholder | Configuração do tenant indisponível |
-| **Auditoria** | `audit_logs` existe, sem UI | Exigência LGPD |
+| **Auditoria** | `audit_logs` alimentado por trigger e UI em `/app/audit` (admin) | Ampliar retenção/exportação p/ LGPD |
 | **PDF / impressão** | Laudos/relatórios sem PDF padronizado | Operação manual |
 | **Paginação/busca** | Padrão só em Pacientes | UX inconsistente nas listas |
 | **Tipos do banco** | Sem geração de tipos (`supabase gen types`) | Menos segurança de tipo |

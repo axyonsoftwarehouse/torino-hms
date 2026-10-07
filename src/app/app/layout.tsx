@@ -48,6 +48,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
       <AppSidebar
         isSuperadmin={session.isSuperadmin}
         isPlatform={isPlatform}
+        isTenantAdmin={session.profile?.role === "tenant_admin"}
         enabledModules={enabledModules}
       />
       <div className="flex flex-1 flex-col">

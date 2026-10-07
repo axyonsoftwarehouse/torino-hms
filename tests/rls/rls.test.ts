@@ -129,4 +129,18 @@ describe.skipIf(!hasEnv)("RLS / RBAC (e2e)", () => {
       .insert({ tenant_id: tenantA, full_name: "Escrita negada" });
     expect(error).not.toBeNull();
   });
+
+  it("registra eventos de auditoria", async () => {
+    const adminA = await signIn(`admin-a-${run}@test.local`);
+    const { data, error } = await adminA.from("audit_logs").select("id, entity, action");
+    expect(error).toBeNull();
+    expect((data ?? []).some((row) => row.entity === "patients")).toBe(true);
+  });
+
+  it("nega leitura de auditoria para o papel patient", async () => {
+    const patient = await signIn(`patient-a-${run}@test.local`);
+    const { data, error } = await patient.from("audit_logs").select("id");
+    expect(error).toBeNull();
+    expect(data ?? []).toHaveLength(0);
+  });
 });

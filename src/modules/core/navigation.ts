@@ -12,6 +12,7 @@ import {
   FileText,
   FlaskConical,
   Gauge,
+  History,
   LayoutDashboard,
   LifeBuoy,
   Microscope,
@@ -43,6 +44,7 @@ export type NavItem = {
   icon: LucideIcon;
   module?: ModuleKey;
   adminOnly?: boolean;
+  tenantAdmin?: boolean;
   platform?: boolean;
 };
 
@@ -81,5 +83,6 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Faturas SaaS", href: "/app/billing/invoices", icon: FileText, platform: true },
   { label: "Cupons", href: "/app/billing/coupons", icon: Ticket, platform: true },
   { label: "Equipe", href: "/app/team", icon: UserCog },
+  { label: "Auditoria", href: "/app/audit", icon: History, tenantAdmin: true },
   { label: "Configurações", href: "/app/settings", icon: Settings },
 ];

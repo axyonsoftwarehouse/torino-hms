@@ -10,10 +10,12 @@ import { NAV_ITEMS } from "@/modules/core/navigation";
 export function AppSidebar({
   isSuperadmin,
   isPlatform,
+  isTenantAdmin,
   enabledModules,
 }: {
   isSuperadmin: boolean;
   isPlatform: boolean;
+  isTenantAdmin: boolean;
   enabledModules: string[] | null;
 }) {
   const pathname = usePathname();
@@ -24,6 +26,7 @@ export function AppSidebar({
     }
     if (item.platform) return false;
     if (item.adminOnly && !isSuperadmin) return false;
+    if (item.tenantAdmin && !isSuperadmin && !isTenantAdmin) return false;
     if (item.module && enabledModules && !enabledModules.includes(item.module)) {
       return false;
     }
