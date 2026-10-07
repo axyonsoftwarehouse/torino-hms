@@ -1,9 +1,17 @@
 name: RLS e2e
 
-# Execução manual (workflow_dispatch). Após validar, pode-se adicionar gatilhos
-# automáticos em push/PR que toquem em supabase/migrations/** ou tests/rls/**.
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - "supabase/migrations/**"
+      - "tests/rls/**"
+      - ".github/workflows/rls.yml"
+  pull_request:
+    paths:
+      - "supabase/migrations/**"
+      - "tests/rls/**"
+      - ".github/workflows/rls.yml"
 
 jobs:
   rls:
@@ -31,10 +39,11 @@ jobs:
 
       - name: Export test env
         run: |
-          eval "$(supabase status -o env | sed 's/^/export /')"
-          echo "SUPABASE_TEST_URL=$API_URL" >> "$GITHUB_ENV"
-          echo "SUPABASE_TEST_ANON_KEY=$ANON_KEY" >> "$GITHUB_ENV"
-          echo "SUPABASE_TEST_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY" >> "$GITHUB_ENV"
+          supabase status -o env > /tmp/supabase.env
+          cat /tmp/supabase.env
+          echo "SUPABASE_TEST_URL=$(grep '^API_URL=' /tmp/supabase.env | cut -d'=' -f2- | tr -d '\"')" >> "$GITHUB_ENV"
+          echo "SUPABASE_TEST_ANON_KEY=$(grep '^ANON_KEY=' /tmp/supabase.env | cut -d'=' -f2- | tr -d '\"')" >> "$GITHUB_ENV"
+          echo "SUPABASE_TEST_SERVICE_ROLE_KEY=$(grep '^SERVICE_ROLE_KEY=' /tmp/supabase.env | cut -d'=' -f2- | tr -d '\"')" >> "$GITHUB_ENV"
 
       - name: Run RLS tests
         run: npm run test:rls
